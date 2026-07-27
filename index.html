@@ -203,8 +203,8 @@
 </head>
 <body>
 
-    <!-- Música de fondo (reemplaza URL_DE_TU_CANCION.mp3 con tu enlace) -->
-    <audio id="background-music" loop>
+    <!-- Música de fondo -->
+    <audio id="background-music" loop preload="auto">
         <source src="larile.mp3" type="audio/mpeg">
     </audio>
 
@@ -269,17 +269,20 @@
             // Evitar múltiples clics si ya se está desvaneciendo
             if (welcomeScreen.classList.contains('hidden')) return;
 
-            // Desvanece inmediatamente la pantalla de bienvenida al hacer clic
-            welcomeScreen.classList.add('hidden');
-
-            // Iniciar la música de fondo al hacer clic
+            // Iniciar la música de fondo con prioridad y carga forzada
             const music = document.getElementById('background-music');
             if (music) {
                 music.volume = 0.6; // Volumen al 60%
-                music.play().catch(error => {
-                    console.log("Reproducción automática bloqueada o error:", error);
+                music.load(); // Asegura la lectura del archivo local
+                music.play().then(() => {
+                    console.log("Reproduciendo música con éxito");
+                }).catch(error => {
+                    console.log("Error al reproducir:", error);
                 });
             }
+
+            // Desvanece inmediatamente la pantalla de bienvenida al hacer clic
+            welcomeScreen.classList.add('hidden');
         }
 
         // Animación al hacer scroll en las secciones (lluvia de corazones por 10 segundos)
