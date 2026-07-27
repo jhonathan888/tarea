@@ -21,7 +21,6 @@
             min-height: 100vh;
         }
 
-        
         #bg-animation-layer {
             position: fixed;
             top: 0;
@@ -50,7 +49,6 @@
             100% { transform: translate(0, 0) rotate(0deg); }
         }
 
-        
         #welcome-screen {
             position: fixed;
             top: 0;
@@ -98,7 +96,6 @@
             50% { transform: scale(1.05); }
         }
 
-        
         .falling-particle {
             position: absolute;
             top: -10%;
@@ -119,7 +116,6 @@
             }
         }
 
-        
         header {
             text-align: center;
             padding: 80px 20px 40px 20px;
@@ -143,7 +139,6 @@
             color: #ee9ca7;
         }
 
-     
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -208,7 +203,12 @@
 </head>
 <body>
 
-    <!-- Capa de fondo animado (Huellas y Cabecitas de gato con impulso al hacer click) -->
+    <!-- Música de fondo (reemplaza URL_DE_TU_CANCION.mp3 con tu enlace) -->
+    <audio id="background-music" loop>
+        <source src="https://files.catbox.moe/rwl27o.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Capa de fondo animado -->
     <div id="bg-animation-layer"></div>
 
     <!-- Pantalla de bienvenida con animación -->
@@ -271,9 +271,18 @@
 
             // Desvanece inmediatamente la pantalla de bienvenida al hacer clic
             welcomeScreen.classList.add('hidden');
+
+            // Iniciar la música de fondo al hacer clic
+            const music = document.getElementById('background-music');
+            if (music) {
+                music.volume = 0.6; // Volumen al 60%
+                music.play().catch(error => {
+                    console.log("Reproducción automática bloqueada o error:", error);
+                });
+            }
         }
 
-        // Animación al hacer scroll en las secciones (aquí lanzamos la lluvia de corazones por 10 segundos)
+        // Animación al hacer scroll en las secciones (lluvia de corazones por 10 segundos)
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -285,7 +294,6 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
 
-                    // Lluvia de corazones y pétalos de sakura al mostrar cada imagen/tarjeta
                     const particleCount = 40;
                     const symbols = ['❤️', '💖', '🌸', '🩷', '✨', '🌸', '💕'];
 
@@ -294,22 +302,15 @@
                         particle.className = 'falling-particle';
                         particle.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
                         
-                        // Posición horizontal aleatoria en la pantalla
                         particle.style.left = Math.random() * 100 + 'vw';
-                        
-                        // Tamaños variados
                         particle.style.fontSize = (Math.random() * 18 + 14) + 'px';
                         
-                        // Duración de caída lenta (ajustada para que dure en total los 10 segundos requeridos)
                         const duration = Math.random() * 3 + 7; // Entre 7 y 10 segundos
                         particle.style.animationDuration = duration + 's';
-                        
-                        // Retraso aleatorio corto
                         particle.style.animationDelay = (Math.random() * 0.5) + 's';
 
                         document.body.appendChild(particle);
 
-                        // Eliminar la partícula después de que termine la animación de 10 segundos
                         setTimeout(() => {
                             particle.remove();
                         }, 10500);
@@ -326,10 +327,8 @@
         const bgContainer = document.getElementById('bg-animation-layer');
         const colors = ['#ff9aa2', '#ffb7b2', '#ffdac1', '#e2f0cb', '#b5ead7', '#c7ceea', '#f3c4fb', '#ff99cc'];
         
-        // Huella de gato
         const pawSvg = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30,20 C35,20 38,15 35,10 C32,5 25,7 27,15 C28,18 27,20 30,20 Z" fill="currentColor"/><path d="M70,20 C65,20 62,15 65,10 C68,5 75,7 73,15 C72,18 73,20 70,20 Z" fill="currentColor"/><path d="M20,45 C25,43 26,37 22,33 C18,29 13,34 16,40 C18,43 17,44 20,45 Z" fill="currentColor"/><path d="M80,45 C75,43 74,37 78,33 C82,29 87,34 84,40 C82,43 83,44 80,45 Z" fill="currentColor"/><path d="M50,35 C38,35 30,45 30,58 C30,72 40,80 50,80 C60,80 70,72 70,58 C70,45 62,35 50,35 Z" fill="currentColor"/></svg>`;
         
-        // Cabeza de gato con orejas triangulares
         const catHeadSvg = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M20,35 L35,45 L25,65 Z" fill="currentColor"/><path d="M80,35 L65,45 L75,65 Z" fill="currentColor"/><circle cx="50" cy="55" r="25" fill="currentColor"/></svg>`;
 
         function createFloatingItems() {
@@ -339,11 +338,10 @@
                 const item = document.createElement('div');
                 item.className = 'floating-item';
                 
-                // Alternar entre huella y cabeza de gato con orejas
                 const isCatHead = Math.random() > 0.5;
                 item.innerHTML = isCatHead ? catHeadSvg : pawSvg;
 
-                const size = Math.random() * 25 + 30; // Tamaño visible y cómodo para hacer click
+                const size = Math.random() * 25 + 30;
                 item.style.width = `${size}px`;
                 item.style.height = `${size}px`;
                 item.style.color = colors[Math.floor(Math.random() * colors.length)];
@@ -356,20 +354,17 @@
                 item.style.animationDuration = `${duration}s`;
                 item.style.animationDelay = `${delay}s`;
 
-                // Impulso rápido al hacerle clic (efecto escape)
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
                     
                     item.style.animationPlayState = 'paused';
 
-                    // Impulso fuerte y rápido en una dirección aleatoria
                     const randomX = (Math.random() - 0.5) * 600;
                     const randomY = (Math.random() - 0.5) * 600;
                     
                     item.style.transform = `translate(${randomX}px, ${randomY}px) scale(1.4) rotate(${Math.random() * 720}deg)`;
                     item.style.opacity = '0.2';
 
-                    // Regresa suavemente a su animación normal después de un momento
                     setTimeout(() => {
                         item.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
                         item.style.opacity = '0.75';
